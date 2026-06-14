@@ -46,13 +46,13 @@ var APP_CONFIG = {
   // After deploying Code.gs as a Web App, paste the URL here.
   // Path: Apps Script editor → Deploy → Manage Deployments → copy Web App URL
   // Format: "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
-  BACKEND_URL: "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE",
+  BACKEND_URL: "https://script.google.com/macros/s/AKfycby-LE5gtYKCdXrk7GRKeNj_Sa7YuFwus71-nU_dEw_L3j_aTB4Qyz_a9amaQNDiGD8/exec",
 
   // TODO: OPS WHATSAPP NUMBER
   // The number ops uses to receive booking confirmations and driver verification.
   // Format: international without "+", e.g. "254712345678" for a Kenyan number.
   // Every booking confirmation and driver registration WhatsApp link uses this.
-  OPS_WHATSAPP: "254700000000",
+  OPS_WHATSAPP: "254794152875",
 
   // TODO: GOOGLE MAPS API KEY
   // Required for Google Places Autocomplete (address suggestions) and
