@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ============================================================
+       SEO & SOCIAL METADATA
+       TODO: Update APP_NAME, description, and og:image once final
+       brand name and logo are confirmed.
+       ============================================================ -->
+  <title>SwiftHaul Logistics — Fast, Reliable Cargo Transport in Kenya</title>
+  <meta name="description" content="Book a pick-up, canter, or lorry for your cargo across Kenya. Instant quotes, real-time tracking, and verified drivers." />
+
+  <!-- Open Graph (WhatsApp/Facebook preview) -->
+  <meta property="og:title"       content="SwiftHaul Logistics — On-Demand Cargo Transport" />
+  <meta property="og:description" content="Book trusted transport for your goods. Instant price, WhatsApp confirmation, live tracking." />
+  <meta property="og:type"        content="website" />
+  <!-- TODO: Set og:url to your deployed domain -->
+  <meta property="og:url"         content="https://yoursite.com" />
+  <!-- TODO: Create a 1200×630 brand image and update this path -->
+  <meta property="og:image"       content="/assets/og-image.jpg" />
+
+  <!-- TODO: Add favicon files to /assets/ folder:
+       favicon.ico (32×32), apple-touch-icon.png (180×180) -->
+  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+  <!-- Google Fonts: DM Sans (body) + Syne (display headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- TODO: GOOGLE MAPS PLACES AUTOCOMPLETE
+       Once you have your API key (see app.js Section 1), uncomment this line
+       and add the key. Remove the "YOUR_KEY_HERE" placeholder.
+       <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE&libraries=places" defer></script>
+  -->
+
+  <style>
+    /* ==============================================================
+       DESIGN SYSTEM — SWIFTHAUL LOGISTICS
+       Colour palette: Deep violet anchors, warm gold accent,
+       clean off-white surface, dark charcoal text.
+       Typography: Syne (bold display) + DM Sans (body/UI)
+       Signature element: Diagonal slash accent on the hero wordmark
+       ============================================================== */
+
+    :root {
+      /* Core palette */
+      --color-void:       #0E0A1A;  /* Near-black background for nav/footer */
+      --color-deep:       #1C1033;  /* Rich deep violet — primary dark surface */
+      --color-purple:     #6B3FA0;  /* Main brand purple */
+      --color-purple-mid: #8B5CF6;  /* Mid violet — buttons, accents */
+      --color-purple-lit: #A78BFA;  /* Light violet — highlights */
+      --color-gold:       #F59E0B;  /* Warm gold — primary CTA, trust signals */
+      --color-gold-light: #FCD34D;  /* Light gold — hover states */
+      --color-surface:    #F8F7FF;  /* Off-white with violet tint — page bg */
+      --color-surface-2:  #EDE9FE;  /* Light lavender — card backgrounds */
+      --color-text:       #1A1030;  /* Dark charcoal for body text */
+      --color-text-muted: #6B7280;  /* Muted grey for labels */
+      --color-success:    #10B981;  /* Green for confirmed/active states */
+      --color-error:      #EF4444;  /* Red for errors */
+      --color-white:      #FFFFFF;
+
+      /* Typography */
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      /* Spacing */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-card: 0 2px 16px rgba(107, 63, 160, 0.10);
+      --shadow-elevated: 0 8px 32px rgba(107, 63, 160, 0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── HIDDEN UTILITY ─────────────────────────────────────────── */
+    .hidden { display: none !important; }
+
+    /* ── NAVIGATION ─────────────────────────────────────────────── */
+    .site-nav {
+      background: var(--color-void);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--color-white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+    }
+
+    /* Signature diagonal slash between "Swift" and "Haul" */
+    .nav-logo .slash {
+      color: var(--color-gold);
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links button {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links button:hover {
+      color: var(--color-white);
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    /* Mobile nav toggle */
+    .nav-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--color-white);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ── HERO SECTION ───────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--color-void) 0%, var(--color-deep) 60%, #2D1B69 100%);
+      padding: 80px 24px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle radial glow behind hero text */
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      color: var(--color-white);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .hero-title .accent {
+      color: var(--color-purple-lit);
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── BUTTONS ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 12px 28px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--color-gold);
+      color: var(--color-void);
+    }
+    .btn-primary:hover { background: var(--color-gold-light); box-shadow: 0 4px 20px rgba(245,158,11,0.35); }
+
+    .btn-secondary {
+      background: rgba(139, 92, 246, 0.15);
+      color: var(--color-purple-lit);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    .btn-secondary:hover { background: rgba(139, 92, 246, 0.25); }
+
+    .btn-purple {
+      background: var(--color-purple-mid);
+      color: var(--color-white);
+    }
+    .btn-purple:hover { background: var(--color-purple); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4); }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: var(--color-white);
+    }
+    .btn-whatsapp:hover { background: #1ebe57; }
+
+    .btn-full { width: 100%; }
+
+    .btn-sm { padding: 8px 18px; font-size: 0.875rem; }
+
+    /* ── MAIN CONTENT WRAPPER ───────────────────────────────────── */
+    .content-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .content-wrapper-wide {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── CARDS ──────────────────────────────────────────────────── */
+    .card {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(139, 92, 246, 0.08);
+    }
+
+    .card-header {
+      margin-bottom: 28px;
+    }
+
+    .card-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-void);
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      color: var(--color-text-muted);
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    /* ── FORM ELEMENTS ──────────────────────────────────────────── */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+
+    .form-label .req {
+      color: var(--color-purple-mid);
+      margin-left: 2px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #E5E0F5;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--color-text);
+      background: var(--color-white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--color-purple-mid);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── QUOTE DISPLAY ──────────────────────────────────────────── */
+    .quote-box {
+      background: linear-gradient(135deg, var(--color-deep), #2D1B69);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      margin: 24px 0;
+    }
+
+    .quote-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-purple-lit);
+      margin-bottom: 8px;
+    }
+
+    .quote-amount {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-gold);
+      letter-spacing: -0.02em;
+    }
+
+    .quote-distance {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 6px;
+    }
+
+    /* ── TERMS CHECKBOX ─────────────────────────────────────────── */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--color-purple-mid);
+      flex-shrink: 0;
+    }
+
+    .checkbox-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .checkbox-label a, .checkbox-label button {
+      color: var(--color-purple-mid);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: inherit;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .checkbox-label a:hover, .checkbox-label button:hover {
+      text-decoration: underline;
+    }
+
+    /* ── ERROR MESSAGES ─────────────────────────────────────────── */
+    .form-error {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: var(--color-error);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      margin-bottom: 16px;
+    }
+
+    /* ── SUCCESS PANELS ─────────────────────────────────────────── */
+    .success-panel {
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .success-icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+
+    .success-panel h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--color-void);
+      margin-bottom: 10px;
+    }
+
+    .success-panel p {
+      color: var(--color-text-muted);
+      margin-bottom: 24px;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tracking-code-badge {
+      display: inline-block;
+      background: var(--color-surface-2);
+      border: 2px dashed var(--color-purple-mid);
+      border-radius: var(--radius-md);
+      padding: 14px 28px;
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-purple);
+      letter-spacing: 0.05em;
+      margin-bottom: 28px;
+    }
+
+    /* ── TRACKING RESULT CARD ───────────────────────────────────── */
+    .tracking-result-card {
+      margin-top: 28px;
+    }
+
+    .tracking-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid #F0EBF8;
+    }
+
+    .tracking-field:last-child { border-bottom: none; }
+
+    .tracking-field-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      flex: 0 0 120px;
+    }
+
+    .tracking-field-value {
+      font-size: 0.95rem;
+      color: var(--color-text);
+      text-align: right;
+      flex: 1;
+    }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-pending_confirmation { background: #FEF3C7; color: #92400E; }
+    .status-open                 { background: #EDE9FE; color: #5B21B6; }
+    .status-accepted             { background: #D1FAE5; color: #065F46; }
+    .status-in_progress          { background: #DBEAFE; color: #1E40AF; }
+    .status-completed            { background: #D1FAE5; color: #065F46; }
+    .status-cancelled            { background: #FEE2E2; color: #991B1B; }
+
+    /* Driver info box shown in tracking result */
+    .driver-info-box {
+      background: linear-gradient(135deg, var(--color-surface-2), #F5F3FF);
+      border: 1.5px solid rgba(139, 92, 246, 0.2);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .driver-info-box h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-purple);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── HOW IT WORKS ───────────────────────────────────────────── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin: 40px 0;
+    }
+
+    .step-card {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(139, 92, 246, 0.08);
+      text-align: center;
+    }
+
+    .step-icon {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+    }
+
+    .step-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-void);
+      margin-bottom: 8px;
+    }
+
+    .step-card p {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── LEGAL CONTENT ──────────────────────────────────────────── */
+    .legal-content {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--color-text);
+    }
+
+    .legal-content h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-void);
+      margin: 28px 0 10px;
+    }
+
+    .legal-content h3:first-child { margin-top: 0; }
+
+    .legal-content p {
+      margin-bottom: 14px;
+    }
+
+    .legal-content ul {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+
+    .legal-content ul li {
+      margin-bottom: 6px;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-void);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      color: var(--color-text-muted);
+      margin-bottom: 36px;
+      font-size: 0.95rem;
+    }
+
+    /* ── VEHICLE INFO CARDS (How It Works) ──────────────────────── */
+    .vehicle-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .vehicle-card {
+      background: var(--color-surface-2);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      border: 1px solid rgba(139, 92, 246, 0.12);
+    }
+
+    .vehicle-card h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-purple);
+      margin-bottom: 6px;
+    }
+
+    .vehicle-card p {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--color-void);
+      padding: 48px 24px 32px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .footer-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-brand-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--color-white);
+      margin-bottom: 10px;
+    }
+
+    .footer-col h5 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-purple-lit);
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-col ul li button {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li button:hover { color: var(--color-white); }
+
+    .footer-bottom {
+      max-width: 900px;
+      margin: 24px auto 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ── TOAST NOTIFICATIONS ────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      max-width: 360px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast-success {
+      background: var(--color-void);
+      color: var(--color-white);
+      border-left: 4px solid var(--color-success);
+    }
+
+    .toast-error {
+      background: var(--color-void);
+      color: var(--color-white);
+      border-left: 4px solid var(--color-error);
+    }
+
+    /* ── SECTION DIVIDER ────────────────────────────────────────── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(139,92,246,0.2), transparent);
+      margin: 48px 0;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .nav-links { display: none; }
+      .nav-mobile-toggle { display: block; }
+      .card { padding: 24px 18px; }
+      .hero { padding: 56px 20px 52px; }
+      .nav-links.mobile-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--color-void);
+        padding: 12px;
+        border-bottom: 1px solid rgba(139,92,246,0.2);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+       Buttons call showView() from app.js to switch page sections.
+       ============================================================ -->
+  <nav class="site-nav">
+    <span class="nav-logo" onclick="showView('booking')">
+      Swift<span class="slash">/</span>Haul
+    </span>
+
+    <!-- Desktop nav links -->
+    <ul class="nav-links" id="main-nav-links">
+      <li><button onclick="showView('booking')">Get a Quote</button></li>
+      <li><button onclick="showView('tracking')">Track Order</button></li>
+      <li><button onclick="showView('how-it-works')">How It Works</button></li>
+      <li><button onclick="window.location.href='driver.html'" style="color:var(--color-gold);">Driver Portal →</button></li>
+    </ul>
+
+    <!-- Mobile toggle -->
+    <button class="nav-mobile-toggle" id="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <!-- ============================================================
+       HERO SECTION
+       Shown above the booking form — always visible on page load.
+       ============================================================ -->
+  <section class="hero" id="hero">
+    <p class="hero-eyebrow">Kenya's On-Demand Cargo Platform</p>
+    <h1 class="hero-title">
+      Move anything.<br />
+      <span class="accent">Anywhere in Kenya.</span>
+    </h1>
+    <p class="hero-subtitle">
+      Instant price estimate, WhatsApp confirmation, and verified drivers — all in under a minute.
+    </p>
+    <div class="hero-cta-group">
+      <button class="btn btn-primary" onclick="showView('booking')">Get Instant Quote</button>
+      <button class="btn btn-secondary" onclick="showView('how-it-works')">How It Works</button>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       VIEW: BOOKING (default landing view)
+       ============================================================ -->
+  <section id="view-booking">
+    <div class="content-wrapper">
+
+      <!-- Booking Form -->
+      <div class="card" id="booking-form">
+        <div class="card-header">
+          <h2>Get an instant quote</h2>
+          <p>Fill in your details and see a price immediately.</p>
+        </div>
+
+        <!-- Error display -->
+        <div class="form-error hidden" id="booking-error"></div>
+
+        <!-- Personal details -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="customer-name">Your Name <span class="req">*</span></label>
+            <input class="form-input" type="text" id="customer-name" placeholder="e.g. Amina Odhiambo" autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="customer-mobile">Mobile Number <span class="req">*</span></label>
+            <input class="form-input" type="tel" id="customer-mobile" placeholder="e.g. 0712345678" autocomplete="tel" />
+          </div>
+        </div>
+
+        <!-- Addresses -->
+        <div class="form-group">
+          <label class="form-label" for="pickup-address">Pickup Location <span class="req">*</span></label>
+          <input class="form-input" type="text" id="pickup-address" placeholder="e.g. Industrial Area, Nairobi" />
+          <!-- TODO: When API key is added, this input gets Google Places Autocomplete -->
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="dest-address">Destination <span class="req">*</span></label>
+          <input class="form-input" type="text" id="dest-address" placeholder="e.g. Mombasa Road, Machakos" />
+          <!-- TODO: When API key is added, this input gets Google Places Autocomplete -->
+        </div>
+
+        <!-- Manual KM input (shown when MANUAL_KM_MODE = true) -->
+        <!-- Hidden automatically when Google Maps API is configured -->
+        <div class="form-group" id="manual-km-container">
+          <label class="form-label" for="manual-km">Approximate Distance (KM) <span class="req">*</span></label>
+          <input class="form-input" type="number" id="manual-km" placeholder="e.g. 45" min="1" max="2000" />
+          <p class="form-hint">
+            Estimate using Google Maps or a similar tool. We add a 30% buffer for local road conditions.
+            <!-- This field is replaced by automatic distance calculation once the Google Maps API key is configured in app.js -->
+          </p>
+        </div>
+
+        <!-- Vehicle and cargo selection -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="vehicle-class">Vehicle Type <span class="req">*</span></label>
+            <select class="form-select" id="vehicle-class">
+              <option value="">Select vehicle...</option>
+              <!-- Values match VEHICLE_RATES keys in app.js -->
+              <option value="PICKUP">1-Ton Pick-up (light cargo)</option>
+              <option value="CANTER">3-Ton Canter (medium loads)</option>
+              <option value="LORRY">10-Ton Lorry (heavy / bulk)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cargo-type">Cargo Type <span class="req">*</span></label>
+            <select class="form-select" id="cargo-type">
+              <option value="">Select type...</option>
+              <!-- Labels are client-friendly; values map to CARGO_MULTIPLIERS in app.js -->
+              <option value="STANDARD">Standard / General Goods</option>
+              <option value="FRAGILE">Fragile / Electronics</option>
+              <option value="PERISHABLE">Perishable / Cold Items</option>
+              <option value="BULKY">Bulky / Construction Materials</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Live quote display -->
+        <div class="quote-box">
+          <p class="quote-label">Your Estimated Total</p>
+          <div class="quote-amount" id="quote-display">Fill fields above</div>
+          <p class="quote-distance" id="distance-display"></p>
+        </div>
+
+        <!-- T&Cs agreement -->
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms-agree" />
+          <label class="checkbox-label" for="terms-agree">
+            I have read and agree to the
+            <button onclick="showView('terms-client')">Client Terms &amp; Conditions</button>
+            and
+            <button onclick="showView('privacy')">Privacy Policy</button>.
+            I understand payment is made directly to the driver after delivery.
+          </label>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="book-btn" onclick="handleBookingSubmit()">
+          Confirm Booking →
+        </button>
+      </div>
+
+      <!-- Booking success panel (hidden until submission) -->
+      <div class="card hidden" id="booking-success">
+        <div class="success-panel">
+          <div class="success-icon">🎉</div>
+          <h3>Booking Received!</h3>
+          <p>Your tracking code is:</p>
+          <div class="tracking-code-badge" id="success-tracking-code">—</div>
+          <p>
+            Save this code to track your order. We'll message you on WhatsApp to confirm your booking shortly.
+          </p>
+          <p style="margin-bottom:24px;">
+            <strong>Payment:</strong> Settle directly with your driver after delivery.
+          </p>
+
+          <!-- WhatsApp confirmation button -->
+          <a href="#" class="btn btn-whatsapp btn-full" id="whatsapp-confirm-btn" style="margin-bottom:12px;">
+            📲 Open WhatsApp Confirmation
+          </a>
+          <p class="form-hint" style="text-align:center;">
+            Tap above to complete your booking via WhatsApp. Your driver will be assigned once confirmed.
+          </p>
+
+          <div class="section-divider"></div>
+
+          <button class="btn btn-secondary btn-full" onclick="showView('tracking')">
+            Track My Order
+          </button>
+          <button class="btn btn-secondary btn-full" style="margin-top:10px;" onclick="location.reload()">
+            Make Another Booking
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       VIEW: ORDER TRACKING
+       ============================================================ -->
+  <section id="view-tracking" class="hidden">
+    <div class="content-wrapper">
+      <div class="card">
+        <div class="card-header">
+          <h2>Track Your Order</h2>
+          <p>Enter your tracking code or the mobile number used at booking.</p>
+        </div>
+
+        <div class="form-error hidden" id="tracking-error"></div>
+
+        <div class="form-group">
+          <label class="form-label" for="track-code">Tracking Code</label>
+          <input class="form-input" type="text" id="track-code" placeholder="e.g. SH-A3F9K2M1" />
+        </div>
+
+        <p style="text-align:center;color:var(--color-text-muted);font-size:0.875rem;margin:8px 0;">— or —</p>
+
+        <div class="form-group">
+          <label class="form-label" for="track-mobile">Mobile Number</label>
+          <input class="form-input" type="tel" id="track-mobile" placeholder="e.g. 0712345678" />
+        </div>
+
+        <button class="btn btn-primary btn-full" id="track-btn" onclick="handleTrackingLookup()">
+          Track Order
+        </button>
+
+        <!-- Tracking result (hidden until a result is found) -->
+        <div class="tracking-result-card hidden" id="tracking-result">
+          <div class="section-divider" style="margin:28px 0;"></div>
+
+          <!-- Status badge -->
+          <div style="text-align:center;margin-bottom:24px;">
+            <div class="status-badge" id="tr-status"></div>
+          </div>
+
+          <!-- Order details -->
+          <div class="tracking-field">
+            <span class="tracking-field-label">Tracking Code</span>
+            <span class="tracking-field-value" id="tr-tracking-code">—</span>
+          </div>
+          <div class="tracking-field">
+            <span class="tracking-field-label">Pickup</span>
+            <span class="tracking-field-value" id="tr-pickup">—</span>
+          </div>
+          <div class="tracking-field">
+            <span class="tracking-field-label">Destination</span>
+            <span class="tracking-field-value" id="tr-destination">—</span>
+          </div>
+          <div class="tracking-field">
+            <span class="tracking-field-label">Vehicle</span>
+            <span class="tracking-field-value" id="tr-vehicle">—</span>
+          </div>
+          <div class="tracking-field">
+            <span class="tracking-field-label">Cargo Type</span>
+            <span class="tracking-field-value" id="tr-cargo">—</span>
+          </div>
+          <div class="tracking-field">
+            <span class="tracking-field-label">Quoted Price</span>
+            <span class="tracking-field-value" id="tr-quote">—</span>
+          </div>
+
+          <!-- ── DRIVER DETAILS BOX ──────────────────────────────
+               Visible ONLY when a driver has been assigned.
+               Data comes from the driver's VerifiedDriversPool entry.
+               Shown for status: ACCEPTED | IN_PROGRESS | COMPLETED
+               ─────────────────────────────────────────────────── -->
+          <div class="driver-info-box hidden" id="tr-driver-section">
+            <h4>🚛 Your Driver</h4>
+            <div class="tracking-field">
+              <span class="tracking-field-label">Driver Name</span>
+              <span class="tracking-field-value" id="tr-driver-name">—</span>
+            </div>
+            <div class="tracking-field">
+              <span class="tracking-field-label">Vehicle Plate</span>
+              <span class="tracking-field-value" id="tr-driver-plate">—</span>
+            </div>
+            <div class="tracking-field">
+              <span class="tracking-field-label">WhatsApp</span>
+              <span class="tracking-field-value" id="tr-driver-whatsapp">—</span>
+            </div>
+            <div style="text-align:center;margin-top:16px;">
+              <a href="#" class="btn btn-whatsapp btn-sm" id="tr-driver-whatsapp-link">
+                Message Your Driver
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       VIEW: HOW IT WORKS
+       Public-facing explainer — NO pricing formula details here.
+       ============================================================ -->
+  <section id="view-how-it-works" class="hidden">
+    <div class="content-wrapper-wide">
+      <h1 class="page-title">How SwiftHaul Works</h1>
+      <p class="page-subtitle">Simple, transparent, and built around your trust.</p>
+
+      <!-- Process steps -->
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon">📋</div>
+          <h3>1. Get a Quote</h3>
+          <p>Enter your pickup point, destination, vehicle type, and cargo. An instant price is calculated and shown upfront — no hidden surprises.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">📲</div>
+          <h3>2. Confirm via WhatsApp</h3>
+          <p>After submitting, our team reaches out on WhatsApp to confirm your request. This step ensures every booking is genuine before a driver is assigned.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">🚛</div>
+          <h3>3. Driver Assigned</h3>
+          <p>Once confirmed, a verified driver from our pool accepts your job on a first-come basis. You're notified immediately with their details.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">📍</div>
+          <h3>4. Track Your Cargo</h3>
+          <p>Use your unique tracking code to check the status of your delivery at any time. You'll see your driver's name and contact once they're assigned.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">✅</div>
+          <h3>5. Pay on Delivery</h3>
+          <p>Payment is made directly to your driver after the goods arrive safely. Cash or M-Pesa to the driver — simple and trusted.</p>
+        </div>
+      </div>
+
+      <!-- Vehicle options (no pricing shown) -->
+      <div class="section-divider"></div>
+      <h2 class="page-title" style="font-size:1.5rem;margin-bottom:8px;">Our Vehicle Options</h2>
+      <p class="page-subtitle">Choose the vehicle that fits your load.</p>
+
+      <div class="vehicle-cards">
+        <div class="vehicle-card">
+          <div class="step-icon">🛻</div>
+          <h4>1-Ton Pick-up</h4>
+          <p>Ideal for small loads, furniture, parcels, and short urban runs.</p>
+        </div>
+        <div class="vehicle-card">
+          <div class="step-icon">🚐</div>
+          <h4>3-Ton Canter</h4>
+          <p>Perfect for medium cargo, retail stock, and light construction supplies.</p>
+        </div>
+        <div class="vehicle-card">
+          <div class="step-icon">🚚</div>
+          <h4>10-Ton Lorry</h4>
+          <p>For heavy loads, full pallets, bulk materials, and long-distance haulage.</p>
+        </div>
+      </div>
+
+      <!-- Cargo types (client-friendly, no multiplier numbers) -->
+      <div class="section-divider"></div>
+      <h2 class="page-title" style="font-size:1.5rem;margin-bottom:8px;">Cargo Categories</h2>
+      <p class="page-subtitle">Tell us what you're shipping so your goods are handled right.</p>
+
+      <div class="vehicle-cards">
+        <div class="vehicle-card"><h4>Standard Goods</h4><p>General cargo with no special handling requirements.</p></div>
+        <div class="vehicle-card"><h4>Fragile Items</h4><p>Electronics, glassware, and delicate equipment needing extra care.</p></div>
+        <div class="vehicle-card"><h4>Perishables</h4><p>Produce, dairy, and cold-chain goods requiring timely delivery.</p></div>
+        <div class="vehicle-card"><h4>Bulky Materials</h4><p>Construction supplies, machinery, and oversized cargo.</p></div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- Driver CTA -->
+      <div style="text-align:center;padding:40px 0;">
+        <h2 class="page-title" style="font-size:1.5rem;margin-bottom:10px;">Are you a driver?</h2>
+        <p class="page-subtitle" style="margin-bottom:24px;">Join our verified driver network and start accepting jobs today.</p>
+        <a href="driver.html" class="btn btn-purple">Join as a Driver →</a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       VIEW: CLIENT TERMS & CONDITIONS
+       ============================================================ -->
+  <section id="view-terms-client" class="hidden">
+    <div class="content-wrapper">
+      <h1 class="page-title">Client Terms &amp; Conditions</h1>
+      <p class="page-subtitle">Last updated: 2025. Please read before confirming a booking.</p>
+
+      <div class="card">
+        <div class="legal-content">
+          <h3>1. About the Platform</h3>
+          <p>SwiftHaul Logistics ("SwiftHaul", "we", "us") is an on-demand logistics marketplace that connects clients requiring cargo transport with independent, verified drivers. SwiftHaul facilitates the matching and provides an estimated price — we do not ourselves provide transport services.</p>
+
+          <h3>2. Booking &amp; Confirmation</h3>
+          <p>Submitting a booking request through this platform does not guarantee a confirmed booking. All bookings require explicit confirmation via WhatsApp from our operations team before a driver is assigned. You will receive a tracking code upon submission to monitor your request's status.</p>
+
+          <h3>3. Pricing</h3>
+          <p>The price displayed at the time of booking is an estimate based on the information you provide, including route distance, vehicle type, and cargo category. Final price is as quoted at confirmation. SwiftHaul reserves the right to revise quotes where the actual cargo, distance, or conditions differ significantly from the information provided.</p>
+
+          <h3>4. Payment</h3>
+          <p>Payment for transport services is made directly to your assigned driver upon successful delivery of your goods. SwiftHaul does not collect payment on behalf of drivers in the current service model. Payment methods accepted by drivers include cash and M-Pesa to the driver's personal number.</p>
+
+          <h3>5. Cargo Responsibility</h3>
+          <p>You are responsible for ensuring your cargo is accurately described, legally permitted for transport, and properly prepared for loading. SwiftHaul and its drivers reserve the right to refuse cargo that is:</p>
+          <ul>
+            <li>Illegal under Kenyan law</li>
+            <li>Hazardous materials not disclosed at booking</li>
+            <li>Substantially different from the cargo type declared</li>
+          </ul>
+          <p>Claims arising from loss or damage to cargo are a matter between the client and the driver directly. SwiftHaul facilitates matching and does not assume liability for cargo loss, delay, or damage.</p>
+
+          <h3>6. Cancellation</h3>
+          <p>You may cancel a booking before a driver has been assigned (status: PENDING_CONFIRMATION or OPEN) by contacting our operations team via WhatsApp. Once a driver has accepted your booking (status: ACCEPTED), cancellation may be subject to a partial fee at the driver's discretion.</p>
+
+          <h3>7. Use of Your Data</h3>
+          <p>Information collected during booking (name, mobile number, addresses) is used solely to facilitate the matching and delivery process. See our Privacy Policy for full details. We do not sell your data to third parties.</p>
+
+          <h3>8. Governing Law</h3>
+          <p>These terms are governed by the laws of the Republic of Kenya. Any disputes shall be subject to the jurisdiction of Kenyan courts.</p>
+
+          <h3>9. Changes to These Terms</h3>
+          <p>SwiftHaul reserves the right to update these terms at any time. Continued use of the platform after changes constitutes acceptance of the revised terms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       VIEW: PRIVACY POLICY
+       Per Kenya Data Protection Act 2019 — factual and minimal.
+       TODO: LEGAL — review with a Kenyan lawyer before launch.
+       Register with ODPC if required for your processing volume.
+       ============================================================ -->
+  <section id="view-privacy" class="hidden">
+    <div class="content-wrapper">
+      <h1 class="page-title">Privacy Policy</h1>
+      <p class="page-subtitle">How we collect, use, and protect your personal information.</p>
+
+      <div class="card">
+        <div class="legal-content">
+          <h3>1. Who We Are</h3>
+          <p>SwiftHaul Logistics ("SwiftHaul") operates an on-demand logistics marketplace connecting clients with transport providers in Kenya. This policy describes how we handle personal data in accordance with Kenya's Data Protection Act, 2019.</p>
+
+          <h3>2. What We Collect</h3>
+          <p>When you use our platform, we may collect the following personal information:</p>
+          <ul>
+            <li><strong>Clients:</strong> Full name, mobile phone number, pickup and delivery addresses.</li>
+            <li><strong>Drivers:</strong> Full legal name, WhatsApp number, vehicle registration plate, vehicle documents submitted during verification (National ID, driving licence, insurance, inspection certificate).</li>
+          </ul>
+
+          <h3>3. Why We Collect It</h3>
+          <p>Personal data is collected for the following purposes:</p>
+          <ul>
+            <li>To process and confirm cargo transport bookings</li>
+            <li>To match clients with suitable verified drivers</li>
+            <li>To enable clients to track the status of their bookings</li>
+            <li>To verify driver identity and vehicle compliance before onboarding</li>
+            <li>To communicate booking confirmations and updates via WhatsApp</li>
+          </ul>
+
+          <h3>4. How We Store It</h3>
+          <p>Client and driver data is stored in access-restricted Google Sheets, hosted on Google's infrastructure. Access is limited to SwiftHaul operations personnel. We do not operate public-facing databases or data APIs that expose personal data in bulk.</p>
+
+          <h3>5. What We Do Not Do</h3>
+          <ul>
+            <li>We do not sell, rent, or share your personal data with third-party advertisers.</li>
+            <li>We do not use automated profiling or decision-making systems on your personal data.</li>
+            <li>We do not store payment card information — all payments are made directly between clients and drivers.</li>
+          </ul>
+
+          <h3>6. Your Rights</h3>
+          <p>Under the Data Protection Act, 2019, you have the right to:</p>
+          <ul>
+            <li>Access the personal data we hold about you</li>
+            <li>Request correction of inaccurate data</li>
+            <li>Request deletion of your data (subject to legal retention obligations)</li>
+          </ul>
+          <p>To exercise these rights, contact our operations team via WhatsApp using the number on this site.</p>
+
+          <h3>7. Data Retention</h3>
+          <p>Booking records are retained for a minimum of 12 months for operational and dispute resolution purposes. Driver verification documents are retained for the duration of the driver's active status and up to 24 months thereafter.</p>
+
+          <h3>8. Contact</h3>
+          <p>For privacy-related enquiries, contact us via WhatsApp at the operations number listed on this platform.</p>
+
+          <!-- TODO: LEGAL — If you register with the ODPC, add your registration number here.
+               Example: "SwiftHaul is registered with the Office of the Data Protection Commissioner under registration number DPC/REG/XXXXX." -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <div class="footer-brand-name">Swift<span style="color:var(--color-gold)">/</span>Haul</div>
+        <p style="font-size:0.85rem;line-height:1.6;">On-demand cargo transport across Kenya. Verified drivers. Instant quotes.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><button onclick="showView('booking')">Get a Quote</button></li>
+          <li><button onclick="showView('tracking')">Track Order</button></li>
+          <li><button onclick="showView('how-it-works')">How It Works</button></li>
+          <li><button onclick="window.location.href='driver.html'">Driver Portal</button></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><button onclick="showView('terms-client')">Terms &amp; Conditions</button></li>
+          <li><button onclick="showView('privacy')">Privacy Policy</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <!-- TODO: Update year and registered business name once confirmed -->
+      <span>© 2025 SwiftHaul Logistics. All rights reserved.</span>
+      <span>Built for Kenya 🇰🇪</span>
+    </div>
+  </footer>
+
+  <!-- Load the logic engine -->
+  <script src="app.js"></script>
+
+  <script>
+    // Mobile nav toggle
+    function toggleMobileNav() {
+      var nav = document.getElementById("main-nav-links");
+      nav.classList.toggle("mobile-open");
+    }
+
+    // Initialise the app when the page loads
+    document.addEventListener("DOMContentLoaded", function() {
+      initApp();
+    });
+  </script>
+</body>
+</html>
