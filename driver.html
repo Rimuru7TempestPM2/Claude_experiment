@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ============================================================
+       SEO METADATA — Driver Portal
+       This page is semi-public (linked from index.html footer).
+       noindex prevents it from ranking in search results since it's
+       a functional portal, not a marketing page.
+       ============================================================ -->
+  <title>Driver Portal — SwiftHaul Logistics</title>
+  <meta name="description" content="SwiftHaul driver portal. Log in to view and accept available jobs." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- TODO: Add favicon — same files as index.html /assets/ folder -->
+  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
+
+  <!-- Google Fonts: same as index.html for visual consistency -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==============================================================
+       DESIGN SYSTEM — shared with index.html
+       Same CSS variables, typography, and base components.
+       Driver-specific components added below the shared section.
+       ============================================================== */
+
+    :root {
+      --color-void:       #0E0A1A;
+      --color-deep:       #1C1033;
+      --color-purple:     #6B3FA0;
+      --color-purple-mid: #8B5CF6;
+      --color-purple-lit: #A78BFA;
+      --color-gold:       #F59E0B;
+      --color-gold-light: #FCD34D;
+      --color-surface:    #F8F7FF;
+      --color-surface-2:  #EDE9FE;
+      --color-text:       #1A1030;
+      --color-text-muted: #6B7280;
+      --color-success:    #10B981;
+      --color-error:      #EF4444;
+      --color-white:      #FFFFFF;
+
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-card: 0 2px 16px rgba(107, 63, 160, 0.10);
+      --shadow-elevated: 0 8px 32px rgba(107, 63, 160, 0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ── NAVIGATION ─────────────────────────────────────────────── */
+    .site-nav {
+      background: var(--color-void);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--color-white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo .slash { color: var(--color-gold); }
+
+    .nav-driver-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-purple-lit);
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Logout button — only shown when logged in */
+    .btn-logout {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      border-color: var(--color-error);
+      color: var(--color-error);
+    }
+
+    /* ── PAGE LAYOUT ────────────────────────────────────────────── */
+    .page-container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── CARDS ──────────────────────────────────────────────────── */
+    .card {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(139, 92, 246, 0.08);
+    }
+
+    .card-header {
+      margin-bottom: 28px;
+    }
+
+    .card-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-void);
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      color: var(--color-text-muted);
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    /* ── FORM ELEMENTS ──────────────────────────────────────────── */
+    .form-group { margin-bottom: 20px; }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+
+    .form-label .req { color: var(--color-purple-mid); margin-left: 2px; }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #E5E0F5;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--color-text);
+      background: var(--color-white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--color-purple-mid);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+    }
+
+    /* PIN input — wider character spacing for readability */
+    .pin-input {
+      letter-spacing: 0.4em;
+      font-size: 1.4rem;
+      text-align: center;
+      font-family: var(--font-display);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ── BUTTONS ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 12px 28px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-primary { background: var(--color-gold); color: var(--color-void); }
+    .btn-primary:hover { background: var(--color-gold-light); box-shadow: 0 4px 20px rgba(245,158,11,0.35); }
+
+    .btn-purple { background: var(--color-purple-mid); color: var(--color-white); }
+    .btn-purple:hover { background: var(--color-purple); box-shadow: 0 4px 20px rgba(139,92,246,0.4); }
+
+    .btn-secondary {
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--color-purple);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+    }
+    .btn-secondary:hover { background: rgba(139, 92, 246, 0.2); }
+
+    .btn-whatsapp { background: #25D366; color: var(--color-white); }
+    .btn-whatsapp:hover { background: #1ebe57; }
+
+    .btn-full { width: 100%; }
+    .btn-sm { padding: 8px 18px; font-size: 0.875rem; }
+
+    /* ── ERROR & SUCCESS MESSAGES ───────────────────────────────── */
+    .form-error {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: var(--color-error);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      margin-bottom: 16px;
+    }
+
+    /* ── CHECKBOX ───────────────────────────────────────────────── */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--color-purple-mid);
+      flex-shrink: 0;
+    }
+
+    .checkbox-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .checkbox-label button {
+      color: var(--color-purple-mid);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: inherit;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .checkbox-label button:hover { text-decoration: underline; }
+
+    /* ── SECTION DIVIDER ────────────────────────────────────────── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(139,92,246,0.2), transparent);
+      margin: 32px 0;
+    }
+
+    /* ── DRIVER DASHBOARD HEADER ────────────────────────────────── */
+    .driver-dashboard-header {
+      background: linear-gradient(135deg, var(--color-deep), #2D1B69);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .driver-greeting {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--color-white);
+      letter-spacing: -0.02em;
+    }
+
+    .driver-vehicle-chip {
+      background: rgba(139, 92, 246, 0.25);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-purple-lit);
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .dashboard-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── JOB BOARD ──────────────────────────────────────────────── */
+    .job-board-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--color-void);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .job-board-title button {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-purple-mid);
+      background: none;
+      border: 1px solid rgba(139,92,246,0.25);
+      border-radius: var(--radius-sm);
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .job-board-title button:hover { background: rgba(139,92,246,0.08); }
+
+    /* Individual job card */
+    .job-card {
+      background: var(--color-white);
+      border: 1.5px solid #E8E2F8;
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .job-card:hover {
+      border-color: var(--color-purple-mid);
+      box-shadow: var(--shadow-card);
+    }
+
+    .job-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .job-tracking {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+    }
+
+    .job-class-chip {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--color-surface-2);
+      color: var(--color-purple);
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .job-route {
+      font-size: 0.95rem;
+      color: var(--color-text);
+      font-weight: 500;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    /* Route arrow styling */
+    .job-route .route-arrow {
+      color: var(--color-purple-mid);
+      font-weight: 700;
+      margin: 0 6px;
+    }
+
+    .job-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .job-quote {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--color-gold);
+      letter-spacing: -0.02em;
+    }
+
+    /* Accept button — per-job; disabled immediately on click to prevent double-tap */
+    .btn-accept {
+      background: var(--color-success);
+      color: var(--color-white);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-accept:hover { background: #059669; }
+    .btn-accept:active { transform: scale(0.97); }
+    .btn-accept:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Empty / loading / error states for the job list */
+    .board-state-msg {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+    }
+
+    .board-state-msg .state-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    /* ── SUCCESS PANEL ──────────────────────────────────────────── */
+    .success-panel {
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .success-icon { font-size: 3.5rem; margin-bottom: 16px; }
+
+    .success-panel h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--color-void);
+      margin-bottom: 10px;
+    }
+
+    .success-panel p {
+      color: var(--color-text-muted);
+      margin-bottom: 20px;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── TABS (Login / Register toggle) ────────────────────────── */
+    .tab-group {
+      display: flex;
+      border-bottom: 2px solid #F0EBF8;
+      margin-bottom: 28px;
+    }
+
+    .tab-btn {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background: none;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-btn:hover { color: var(--color-purple); }
+
+    .tab-btn.active {
+      color: var(--color-purple);
+      border-bottom-color: var(--color-purple-mid);
+    }
+
+    /* ── DRIVER T&Cs MODAL ──────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(14,10,26,0.7);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .modal-header {
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid #F0EBF8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--color-void);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 20px 28px 28px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .legal-content {
+      font-size: 0.875rem;
+      line-height: 1.8;
+      color: var(--color-text);
+    }
+
+    .legal-content h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-void);
+      margin: 20px 0 8px;
+    }
+
+    .legal-content h4:first-child { margin-top: 0; }
+    .legal-content p { margin-bottom: 12px; }
+
+    .legal-content ul {
+      padding-left: 18px;
+      margin-bottom: 12px;
+    }
+
+    .legal-content ul li { margin-bottom: 4px; }
+
+    /* ── VERIFICATION CHECKLIST ─────────────────────────────────── */
+    .checklist {
+      background: var(--color-surface-2);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin: 20px 0;
+      border: 1px solid rgba(139,92,246,0.15);
+    }
+
+    .checklist h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-purple);
+      margin-bottom: 14px;
+    }
+
+    .checklist ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checklist ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: var(--color-text);
+    }
+
+    .checklist ul li::before {
+      content: "✓";
+      color: var(--color-purple-mid);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── TOAST ──────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      max-width: 380px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-success { background: var(--color-void); color: var(--color-white); border-left: 4px solid var(--color-success); }
+    .toast-error   { background: var(--color-void); color: var(--color-white); border-left: 4px solid var(--color-error); }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .card { padding: 24px 18px; }
+      .driver-dashboard-header { padding: 22px 20px; }
+      .job-footer { flex-direction: column; align-items: flex-start; }
+      .btn-accept { width: 100%; }
+      .modal-box { max-height: 90vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+       Shows logout button only when a driver is logged in.
+       Controlled via showLogoutBtn() / hideLogoutBtn().
+       ============================================================ -->
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">Swift<span class="slash">/</span>Haul</a>
+    <div class="nav-right">
+      <span class="nav-driver-badge">Driver Portal</span>
+      <!-- Logout button — hidden by default, shown after login -->
+      <button class="btn-logout hidden" id="nav-logout-btn" onclick="handleDriverLogout()">
+        Log Out
+      </button>
+    </div>
+  </nav>
+
+
+  <!-- ============================================================
+       DRIVER VIEW: LOGIN & REGISTRATION (shown before login)
+       Tab group switches between Login form and Registration form.
+       ============================================================ -->
+  <div id="dview-login">
+    <div class="page-container">
+      <div class="card">
+
+        <!-- Tab switcher: Login ↔ Register -->
+        <div class="tab-group">
+          <button class="tab-btn active" id="tab-login" onclick="switchDriverTab('login')">Log In</button>
+          <button class="tab-btn" id="tab-register" onclick="switchDriverTab('register')">Register as Driver</button>
+        </div>
+
+        <!-- ── LOGIN FORM ─────────────────────────────────────── -->
+        <div id="login-form-panel">
+          <div class="card-header" style="margin-bottom:20px;">
+            <h2>Welcome back</h2>
+            <p>Enter your WhatsApp number and 4-digit PIN to access the job board.</p>
+          </div>
+
+          <div class="form-error hidden" id="driver-login-error"></div>
+
+          <div class="form-group">
+            <label class="form-label" for="driver-whatsapp">WhatsApp Number <span class="req">*</span></label>
+            <input class="form-input" type="tel" id="driver-whatsapp"
+              placeholder="e.g. 0712345678"
+              autocomplete="username"
+              inputmode="numeric" />
+            <p class="form-hint">Use the number you registered with.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="driver-pin">4-Digit PIN <span class="req">*</span></label>
+            <input class="form-input pin-input" type="password" id="driver-pin"
+              placeholder="••••"
+              maxlength="4"
+              inputmode="numeric"
+              autocomplete="current-password" />
+          </div>
+
+          <button class="btn btn-primary btn-full" id="driver-login-btn" onclick="handleDriverLogin()">
+            Log In to Job Board
+          </button>
+
+          <p style="text-align:center;margin-top:20px;font-size:0.875rem;color:var(--color-text-muted);">
+            New driver? <button onclick="switchDriverTab('register')"
+              style="background:none;border:none;color:var(--color-purple-mid);font-size:inherit;font-family:inherit;cursor:pointer;font-weight:600;">
+              Register here →
+            </button>
+          </p>
+        </div>
+
+        <!-- ── REGISTRATION FORM ──────────────────────────────── -->
+        <div id="register-form-panel" class="hidden">
+          <div class="card-header" style="margin-bottom:20px;">
+            <h2>Join the driver network</h2>
+            <p>Fill in your details. Our team will verify your documents via WhatsApp.</p>
+          </div>
+
+          <!-- Document checklist shown before form -->
+          <div class="checklist">
+            <h4>📋 What you'll need to get verified:</h4>
+            <ul>
+              <li>A working smartphone with WhatsApp installed</li>
+              <li>Your National ID (original + photo copy)</li>
+              <li>Valid Driving Licence for the correct vehicle class</li>
+              <li>Current Vehicle Insurance certificate</li>
+              <li>Valid Vehicle Inspection certificate</li>
+            </ul>
+          </div>
+
+          <div class="form-error hidden" id="driver-reg-error"></div>
+
+          <!-- Registration fields -->
+          <div id="driver-reg-form">
+            <div class="form-group">
+              <label class="form-label" for="reg-name">Full Legal Name <span class="req">*</span></label>
+              <input class="form-input" type="text" id="reg-name"
+                placeholder="As on your National ID"
+                autocomplete="name" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="reg-whatsapp">WhatsApp Number <span class="req">*</span></label>
+                <input class="form-input" type="tel" id="reg-whatsapp"
+                  placeholder="e.g. 0712345678"
+                  inputmode="numeric" />
+                <p class="form-hint">This becomes your login identifier.</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-plate">Vehicle Plate <span class="req">*</span></label>
+                <input class="form-input" type="text" id="reg-plate"
+                  placeholder="e.g. KCB 123A"
+                  style="text-transform:uppercase;" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-cargo-class">Vehicle Type <span class="req">*</span></label>
+              <select class="form-select" id="reg-cargo-class">
+                <option value="">Select your vehicle...</option>
+                <!-- Values match cargo class codes used throughout the system -->
+                <option value="pickup">1-Ton Pick-up</option>
+                <option value="canter">3-Ton Canter</option>
+                <option value="lorry">10-Ton Lorry</option>
+              </select>
+              <p class="form-hint">You will only see jobs matching this vehicle class.</p>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="reg-pin">Choose a 4-Digit PIN <span class="req">*</span></label>
+                <input class="form-input pin-input" type="password" id="reg-pin"
+                  placeholder="••••"
+                  maxlength="4"
+                  inputmode="numeric"
+                  autocomplete="new-password" />
+                <p class="form-hint">You'll use this to log in. Don't share it.</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-pin-confirm">Confirm PIN <span class="req">*</span></label>
+                <input class="form-input pin-input" type="password" id="reg-pin-confirm"
+                  placeholder="••••"
+                  maxlength="4"
+                  inputmode="numeric"
+                  autocomplete="new-password" />
+              </div>
+            </div>
+
+            <!-- Driver T&Cs agreement -->
+            <div class="checkbox-group">
+              <input type="checkbox" id="driver-terms-agree" />
+              <label class="checkbox-label" for="driver-terms-agree">
+                I have read and agree to the
+                <button onclick="openDriverTermsModal()">Driver Terms &amp; Conditions</button>.
+                I understand trip prices are set by the platform and final settlement is directly with the client after delivery.
+              </label>
+            </div>
+
+            <button class="btn btn-primary btn-full" id="driver-reg-btn" onclick="handleDriverRegistration()">
+              Submit Registration →
+            </button>
+          </div>
+
+          <!-- Registration success state (hidden until submission) -->
+          <div class="success-panel hidden" id="driver-reg-success">
+            <div class="success-icon">🎉</div>
+            <h3>Registration Submitted!</h3>
+            <p>
+              Your details have been received. Our team will contact you on WhatsApp to complete document verification. Once approved, you can log in and start accepting jobs.
+            </p>
+            <a href="#" class="btn btn-whatsapp btn-full" id="driver-reg-wa-btn" style="margin-bottom:12px;">
+              📲 Send Documents via WhatsApp
+            </a>
+            <p class="form-hint" style="text-align:center;">
+              Tap above to message our verification team directly with your documents.
+            </p>
+            <div class="section-divider"></div>
+            <button class="btn btn-secondary btn-full" onclick="switchDriverTab('login')">
+              Back to Login
+            </button>
+          </div>
+
+        </div>
+        <!-- end register-form-panel -->
+
+      </div>
+    </div>
+  </div>
+  <!-- end dview-login -->
+
+
+  <!-- ============================================================
+       DRIVER VIEW: JOB BOARD (shown after successful login)
+       Shows the driver's profile header + list of available jobs.
+       Jobs are fetched live from the backend on load and on refresh.
+       ============================================================ -->
+  <div id="dview-job-board" class="hidden">
+    <div class="page-container">
+
+      <!-- Driver welcome header -->
+      <div class="driver-dashboard-header">
+        <div>
+          <div class="driver-greeting">👋 Hey, <span id="driver-welcome-name">Driver</span></div>
+          <div class="driver-vehicle-chip" id="driver-vehicle-info">—</div>
+        </div>
+        <div class="dashboard-actions">
+          <!-- Refresh button re-fetches jobs from backend -->
+          <button class="btn btn-secondary btn-sm" onclick="loadJobBoard()">
+            ↻ Refresh Jobs
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="handleDriverLogout()">
+            Log Out
+          </button>
+        </div>
+      </div>
+
+      <!-- Job board section -->
+      <div class="job-board-title">
+        <span>Available Jobs</span>
+        <button onclick="loadJobBoard()">↻ Refresh</button>
+      </div>
+
+      <!-- Job list — populated dynamically by renderJobList() in app.js -->
+      <!-- States: loading message → job cards → empty message → error message -->
+      <div id="job-list">
+        <div class="board-state-msg">
+          <span class="state-icon">⏳</span>
+          Loading available jobs...
+        </div>
+      </div>
+
+      <!-- Footer note about how payment works -->
+      <div style="margin-top:40px;padding:20px 24px;background:var(--color-surface-2);border-radius:var(--radius-md);border:1px solid rgba(139,92,246,0.12);">
+        <p style="font-size:0.875rem;color:var(--color-text-muted);line-height:1.7;">
+          <strong style="color:var(--color-purple);">Payment reminder:</strong>
+          Collect payment directly from the client after delivery (cash or M-Pesa to your number).
+          Platform commission is remitted separately — contact ops for payment details.
+        </p>
+      </div>
+
+    </div>
+  </div>
+  <!-- end dview-job-board -->
+
+
+  <!-- ============================================================
+       DRIVER TERMS & CONDITIONS MODAL
+       Opened from the registration form T&Cs checkbox link.
+       Closed with the X button or clicking outside the modal box.
+       ============================================================ -->
+  <div class="modal-overlay hidden" id="driver-terms-modal" onclick="closeDriverTermsModalOnBackdrop(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Driver Terms &amp; Conditions</h3>
+        <button class="modal-close" onclick="closeDriverTermsModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="legal-content">
+
+          <h4>1. About the Platform</h4>
+          <p>SwiftHaul Logistics ("SwiftHaul", "the Platform") connects independent transport providers ("Drivers") with clients requiring cargo delivery across Kenya. SwiftHaul does not employ Drivers — you operate as an independent service provider using the Platform to access job opportunities.</p>
+
+          <h4>2. Eligibility</h4>
+          <p>To participate as a Driver, you must:</p>
+          <ul>
+            <li>Be at least 18 years of age</li>
+            <li>Hold a valid Kenyan driving licence for your registered vehicle class</li>
+            <li>Maintain valid vehicle insurance and a current inspection certificate</li>
+            <li>Own or have lawful possession of the vehicle registered on the Platform</li>
+            <li>Have a functioning smartphone with WhatsApp installed</li>
+          </ul>
+
+          <h4>3. Verification</h4>
+          <p>Acceptance onto the Platform is subject to document verification by our operations team. Approval Status is set to "Active" only after all required documents have been reviewed and accepted. SwiftHaul reserves the right to reject applications or revoke Active status at its discretion.</p>
+
+          <h4>4. Job Matching</h4>
+          <p>Jobs are offered on a first-come, first-served basis. Once you accept a job, you are committed to completing it. Repeated cancellations after acceptance may result in removal from the Active driver pool.</p>
+
+          <h4>5. Pricing & Quotes</h4>
+          <p>Trip prices are calculated and suggested by the Platform based on route distance, vehicle class, cargo type, and current fuel index. These prices are estimates. The quoted amount is what is presented to the client. Final settlement is directly between you and the client after delivery. SwiftHaul does not guarantee minimum earnings per trip.</p>
+
+          <h4>6. Payment & Commission</h4>
+          <p>Clients pay you directly after delivery (cash or M-Pesa). A platform commission applies to each completed job. Commission remittance to SwiftHaul is expected after each job. Failure to remit commission may result in suspension from the Platform. Commission rates are communicated separately during onboarding.</p>
+
+          <h4>7. Conduct</h4>
+          <p>Drivers are expected to:</p>
+          <ul>
+            <li>Handle all cargo with appropriate care for the declared cargo type</li>
+            <li>Communicate promptly with clients and ops via WhatsApp</li>
+            <li>Not subcontract jobs to other drivers without prior approval</li>
+            <li>Maintain their vehicle in roadworthy condition at all times</li>
+          </ul>
+
+          <h4>8. Liability</h4>
+          <p>Drivers are solely responsible for the safe and timely delivery of cargo once accepted. SwiftHaul accepts no liability for cargo loss, damage, or delay arising from the Driver's actions or vehicle condition. Drivers are encouraged to maintain cargo-in-transit insurance where possible.</p>
+
+          <h4>9. Termination</h4>
+          <p>SwiftHaul may remove a Driver from the Active pool for: non-payment of commission, repeated job abandonment, misconduct, document expiry, or any conduct deemed harmful to clients or the Platform's reputation.</p>
+
+          <h4>10. Data</h4>
+          <p>By registering, you consent to SwiftHaul storing your name, WhatsApp number, vehicle details, and submitted documents for the purpose of platform operations. See our Privacy Policy for full details. Your data is not sold to third parties.</p>
+
+          <h4>11. Governing Law</h4>
+          <p>These terms are governed by the laws of the Republic of Kenya.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end driver terms modal -->
+
+
+  <!-- Load the shared logic engine -->
+  <script src="app.js"></script>
+
+  <script>
+    // ===========================================================
+    // DRIVER PORTAL — PAGE-LEVEL SCRIPT
+    // Initialises the driver app and handles UI interactions
+    // specific to driver.html that don't belong in app.js
+    // ===========================================================
+
+    // Initialise on load — checks localStorage for existing session
+    document.addEventListener("DOMContentLoaded", function () {
+      initDriverApp();
+    });
+
+    // ── TAB SWITCHING (Login ↔ Register) ──────────────────────
+    // Toggles which panel is visible inside the login view card.
+    function switchDriverTab(tab) {
+      var loginPanel  = document.getElementById("login-form-panel");
+      var regPanel    = document.getElementById("register-form-panel");
+      var tabLogin    = document.getElementById("tab-login");
+      var tabRegister = document.getElementById("tab-register");
+
+      if (tab === "login") {
+        loginPanel.classList.remove("hidden");
+        regPanel.classList.add("hidden");
+        tabLogin.classList.add("active");
+        tabRegister.classList.remove("active");
+      } else {
+        loginPanel.classList.add("hidden");
+        regPanel.classList.remove("hidden");
+        tabLogin.classList.remove("active");
+        tabRegister.classList.add("active");
+      }
+    }
+
+    // ── NAV LOGOUT BUTTON VISIBILITY ──────────────────────────
+    // app.js calls these when login state changes.
+    // We override showDriverView here to also manage the logout button.
+    var _originalShowDriverView = showDriverView;
+    showDriverView = function(viewName) {
+      _originalShowDriverView(viewName);
+      var logoutBtn = document.getElementById("nav-logout-btn");
+      if (logoutBtn) {
+        if (viewName === "job-board") {
+          logoutBtn.classList.remove("hidden");
+        } else {
+          logoutBtn.classList.add("hidden");
+        }
+      }
+    };
+
+    // ── DRIVER T&Cs MODAL ──────────────────────────────────────
+    // Opens the driver terms modal from the registration checkbox link.
+    function openDriverTermsModal() {
+      var modal = document.getElementById("driver-terms-modal");
+      if (modal) modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden"; // prevent background scroll
+    }
+
+    function closeDriverTermsModal() {
+      var modal = document.getElementById("driver-terms-modal");
+      if (modal) modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    // Close modal when clicking the dark backdrop (not the modal box itself)
+    function closeDriverTermsModalOnBackdrop(event) {
+      if (event.target === document.getElementById("driver-terms-modal")) {
+        closeDriverTermsModal();
+      }
+    }
+
+    // ── JOB CARD RENDERING ─────────────────────────────────────
+    // Override renderJobList from app.js to use driver.html-specific
+    // HTML structure with proper class names matching this file's CSS.
+    //
+    // HOW JOB CARDS WORK:
+    //   Each card shows: tracking code chip, cargo class chip, route summary,
+    //   quoted price, and an Accept button. Clicking Accept calls handleAcceptJob()
+    //   in app.js, which acquires the backend lock and updates both sheets.
+    //
+    // TO CHANGE THE CARD LAYOUT:
+    //   Edit the HTML template string below. The data fields available are:
+    //   job.trackingCode | job.cargoClass | job.route | job.quote
+    renderJobList = function(jobs) {
+      var jobListEl = document.getElementById("job-list");
+      if (!jobListEl) return;
+
+      if (!jobs || jobs.length === 0) {
+        jobListEl.innerHTML = [
+          "<div class='board-state-msg'>",
+          "  <span class='state-icon'>📭</span>",
+          "  <strong>No jobs available right now</strong><br />",
+          "  <span>Check back soon or tap Refresh. New jobs appear as soon as clients confirm.</span>",
+          "</div>"
+        ].join("");
+        return;
+      }
+
+      var html = jobs.map(function(job) {
+        // Split route "A → B" for styled display
+        var routeParts = String(job.route).split("→");
+        var routeHtml  = routeParts.length === 2
+          ? escapeHtml(routeParts[0].trim()) + '<span class="route-arrow">→</span>' + escapeHtml(routeParts[1].trim())
+          : escapeHtml(job.route);
+
+        return [
+          "<div class='job-card' id='job-" + escapeHtml(job.trackingCode) + "'>",
+          "  <div class='job-card-header'>",
+          "    <span class='job-tracking'>#" + escapeHtml(job.trackingCode) + "</span>",
+          "    <span class='job-class-chip'>" + escapeHtml(job.cargoClass) + "</span>",
+          "  </div>",
+          "  <div class='job-route'>" + routeHtml + "</div>",
+          "  <div class='job-footer'>",
+          "    <span class='job-quote'>KES " + Number(job.quote).toLocaleString() + "</span>",
+          "    <button class='btn-accept' onclick='handleAcceptJob(\"" + escapeHtml(job.trackingCode) + "\")'>",
+          "      Accept Job ✓",
+          "    </button>",
+          "  </div>",
+          "</div>"
+        ].join("\n");
+      }).join("\n");
+
+      jobListEl.innerHTML = html;
+    };
+  </script>
+
+</body>
+</html>
