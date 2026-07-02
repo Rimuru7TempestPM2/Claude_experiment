@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -827,21 +827,43 @@
 
   <!-- ============================================================
        VIEW: BOOKING (default landing view)
+       Three booking types: Single Trip | Multiple Trips | Time Hire
+       switchBookingType() in app.js Section 7A controls which panel
+       is visible. All three funnel into the shared success panel.
        ============================================================ -->
   <section id="view-booking">
     <div class="content-wrapper">
 
-      <!-- Booking Form -->
-      <div class="card" id="booking-form">
+      <!-- ── BOOKING TYPE SELECTOR TABS ────────────────────────── -->
+      <!-- Calls switchBookingType() from app.js Section 7A -->
+      <div class="booking-type-tabs">
+        <button class="booking-type-tab active" id="type-tab-single"
+          onclick="switchBookingType('SINGLE')">
+          🚛 Single Trip
+        </button>
+        <button class="booking-type-tab" id="type-tab-multi-trip"
+          onclick="switchBookingType('MULTI_TRIP')">
+          🔁 Multiple Trips
+        </button>
+        <button class="booking-type-tab" id="type-tab-time-hire"
+          onclick="switchBookingType('TIME_HIRE')">
+          ⏱ Time Hire
+        </button>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           PANEL 1: SINGLE TRIP
+           Original v1 booking form — one pickup, one destination.
+           Handled by handleBookingSubmit() in app.js Section 7B.
+           ══════════════════════════════════════════════════════════ -->
+      <div class="card" id="booking-form" id="panel-single">
         <div class="card-header">
           <h2>Get an instant quote</h2>
-          <p>Fill in your details and see a price immediately.</p>
+          <p>One pickup, one destination. Price shown immediately.</p>
         </div>
 
-        <!-- Error display -->
         <div class="form-error hidden" id="booking-error"></div>
 
-        <!-- Personal details -->
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="customer-name">Your Name <span class="req">*</span></label>
@@ -853,37 +875,31 @@
           </div>
         </div>
 
-        <!-- Addresses -->
         <div class="form-group">
           <label class="form-label" for="pickup-address">Pickup Location <span class="req">*</span></label>
           <input class="form-input" type="text" id="pickup-address" placeholder="e.g. Industrial Area, Nairobi" />
-          <!-- TODO: When API key is added, this input gets Google Places Autocomplete -->
+          <!-- TODO: Google Places Autocomplete activates here once API key is set in app.js -->
         </div>
 
         <div class="form-group">
           <label class="form-label" for="dest-address">Destination <span class="req">*</span></label>
           <input class="form-input" type="text" id="dest-address" placeholder="e.g. Mombasa Road, Machakos" />
-          <!-- TODO: When API key is added, this input gets Google Places Autocomplete -->
         </div>
 
-        <!-- Manual KM input (shown when MANUAL_KM_MODE = true) -->
-        <!-- Hidden automatically when Google Maps API is configured -->
+        <!-- Manual KM — shown when MANUAL_KM_MODE = true in app.js Section 1 -->
+        <!-- Replaced by automatic distance once Google Maps API key is configured -->
         <div class="form-group" id="manual-km-container">
           <label class="form-label" for="manual-km">Approximate Distance (KM) <span class="req">*</span></label>
           <input class="form-input" type="number" id="manual-km" placeholder="e.g. 45" min="1" max="2000" />
-          <p class="form-hint">
-            Estimate using Google Maps or a similar tool. We add a 30% buffer for local road conditions.
-            <!-- This field is replaced by automatic distance calculation once the Google Maps API key is configured in app.js -->
-          </p>
+          <p class="form-hint">Estimate on Google Maps. We add a 30% buffer for local road conditions.</p>
         </div>
 
-        <!-- Vehicle and cargo selection -->
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="vehicle-class">Vehicle Type <span class="req">*</span></label>
             <select class="form-select" id="vehicle-class">
               <option value="">Select vehicle...</option>
-              <!-- Values match VEHICLE_RATES keys in app.js -->
+              <!-- Values match VEHICLE_RATES keys in app.js Section 1 -->
               <option value="PICKUP">1-Ton Pick-up (light cargo)</option>
               <option value="CANTER">3-Ton Canter (medium loads)</option>
               <option value="LORRY">10-Ton Lorry (heavy / bulk)</option>
@@ -893,7 +909,7 @@
             <label class="form-label" for="cargo-type">Cargo Type <span class="req">*</span></label>
             <select class="form-select" id="cargo-type">
               <option value="">Select type...</option>
-              <!-- Labels are client-friendly; values map to CARGO_MULTIPLIERS in app.js -->
+              <!-- Values map to CARGO_MULTIPLIERS in app.js Section 1 -->
               <option value="STANDARD">Standard / General Goods</option>
               <option value="FRAGILE">Fragile / Electronics</option>
               <option value="PERISHABLE">Perishable / Cold Items</option>
@@ -902,21 +918,28 @@
           </div>
         </div>
 
-        <!-- Live quote display -->
+        <!-- Cargo description — free text, informational only, does NOT affect price -->
+        <!-- Character counter wired by wireCargoDescriptionCounter() in app.js Section 7F -->
+        <div class="form-group">
+          <label class="form-label" for="cargo-description">Describe Your Goods <span class="req">*</span></label>
+          <textarea class="form-input" id="cargo-description" rows="2" maxlength="300"
+            placeholder="e.g. 50 bags of cement, approx 2 tons. Keep it short and specific."></textarea>
+          <p class="form-hint">Helps your driver prepare. <span id="cargo-description-count">0</span>/300 characters.</p>
+        </div>
+
+        <!-- Live price display — only totalQuote shown, formula stays hidden -->
         <div class="quote-box">
           <p class="quote-label">Your Estimated Total</p>
           <div class="quote-amount" id="quote-display">Fill fields above</div>
           <p class="quote-distance" id="distance-display"></p>
         </div>
 
-        <!-- T&Cs agreement -->
         <div class="checkbox-group">
           <input type="checkbox" id="terms-agree" />
           <label class="checkbox-label" for="terms-agree">
             I have read and agree to the
             <button onclick="showView('terms-client')">Client Terms &amp; Conditions</button>
-            and
-            <button onclick="showView('privacy')">Privacy Policy</button>.
+            and <button onclick="showView('privacy')">Privacy Policy</button>.
             I understand payment is made directly to the driver after delivery.
           </label>
         </div>
@@ -926,26 +949,196 @@
         </button>
       </div>
 
-      <!-- Booking success panel (hidden until submission) -->
+
+      <!-- ══════════════════════════════════════════════════════════
+           PANEL 2: MULTIPLE TRIPS
+           Client adds 2-20 trip blocks (each with own route + price).
+           Each trip becomes an independent job on the driver board.
+           Different drivers can accept different trips.
+           Handled by handleMultiTripSubmit() in app.js Section 7C.
+           Trip blocks are generated dynamically by addTripBlock().
+           ══════════════════════════════════════════════════════════ -->
+      <div class="hidden" id="panel-multi">
+        <div class="card">
+          <div class="card-header">
+            <h2>Multiple Trips</h2>
+            <p>Add up to 20 trips in one booking. Each trip can be a different route — confirmed and priced individually.</p>
+          </div>
+
+          <div class="form-error hidden" id="multi-trip-error"></div>
+
+          <!-- Shared customer details for the whole batch -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="multi-customer-name">Your Name <span class="req">*</span></label>
+              <input class="form-input" type="text" id="multi-customer-name" placeholder="e.g. James Kariuki" autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="multi-customer-mobile">Mobile Number <span class="req">*</span></label>
+              <input class="form-input" type="tel" id="multi-customer-mobile" placeholder="e.g. 0712345678" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <!-- Trip blocks inserted here dynamically by addTripBlock() in app.js -->
+          <!-- Each block gets its own pickup/dest/vehicle/cargo/quote fields -->
+          <div id="trip-blocks-container"></div>
+
+          <!-- Add trip button -->
+          <button type="button" class="btn btn-secondary btn-full" onclick="addTripBlock()" style="margin-bottom:24px;">
+            + Add Another Trip
+          </button>
+
+          <!-- Running batch total — updated live as each trip is priced -->
+          <div class="quote-box">
+            <p class="quote-label">Total for All Trips</p>
+            <div class="quote-amount" id="multi-trip-total">Fill in trip details to see total</div>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="multi-terms-agree" />
+            <label class="checkbox-label" for="multi-terms-agree">
+              I have read and agree to the
+              <button onclick="showView('terms-client')">Client Terms &amp; Conditions</button>
+              and <button onclick="showView('privacy')">Privacy Policy</button>.
+              Each trip may be assigned to a different driver. Payment is per driver after each delivery.
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="multi-trip-book-btn" onclick="handleMultiTripSubmit()">
+            Confirm All Trips →
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══════════════════════════════════════════════════════════
+           PANEL 3: TIME HIRE
+           Client hires one vehicle for a block of hours.
+           Price = (HourlyRate × hours) × FuelSurcharge × CargoMultiplier
+           See HOURLY_RATES in app.js Section 1 for rates.
+           Handled by handleTimeHireSubmit() in app.js Section 7D.
+           ══════════════════════════════════════════════════════════ -->
+      <div class="hidden" id="panel-hire">
+        <div class="card">
+          <div class="card-header">
+            <h2>Time Hire</h2>
+            <p>Book a vehicle for a set number of hours. Ideal when you need a driver on standby or have unpredictable stops.</p>
+          </div>
+
+          <div class="form-error hidden" id="hire-error"></div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="hire-customer-name">Your Name <span class="req">*</span></label>
+              <input class="form-input" type="text" id="hire-customer-name" placeholder="e.g. Grace Wanjiku" autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hire-customer-mobile">Mobile Number <span class="req">*</span></label>
+              <input class="form-input" type="tel" id="hire-customer-mobile" placeholder="e.g. 0712345678" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="hire-location">Hire Location / Area <span class="req">*</span></label>
+            <input class="form-input" type="text" id="hire-location" placeholder="e.g. Westlands, Nairobi" />
+            <p class="form-hint">General area where the vehicle will operate. Driver will confirm exact pickup point.</p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="hire-vehicle-class">Vehicle Type <span class="req">*</span></label>
+              <select class="form-select" id="hire-vehicle-class">
+                <option value="">Select vehicle...</option>
+                <!-- Values match HOURLY_RATES keys in app.js Section 1 -->
+                <option value="PICKUP">1-Ton Pick-up</option>
+                <option value="CANTER">3-Ton Canter</option>
+                <option value="LORRY">10-Ton Lorry</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hire-hours">Number of Hours <span class="req">*</span></label>
+              <!-- Min/max enforced in app.js Section 7D via TIME_HIRE_MIN/MAX_HOURS config -->
+              <input class="form-input" type="number" id="hire-hours" placeholder="e.g. 4" min="2" max="12" step="0.5" />
+              <p class="form-hint">Minimum 2 hours. For 12+ hours contact us for a custom quote.</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="hire-cargo-type">Cargo Type <span class="req">*</span></label>
+            <select class="form-select" id="hire-cargo-type">
+              <option value="">Select type...</option>
+              <option value="STANDARD">Standard / General Goods</option>
+              <option value="FRAGILE">Fragile / Electronics</option>
+              <option value="PERISHABLE">Perishable / Cold Items</option>
+              <option value="BULKY">Bulky / Construction Materials</option>
+            </select>
+          </div>
+
+          <!-- Cargo description — informational, does NOT affect hire price -->
+          <div class="form-group">
+            <label class="form-label" for="hire-cargo-description">Describe Your Goods</label>
+            <textarea class="form-input" id="hire-cargo-description" rows="2" maxlength="300"
+              placeholder="e.g. Moving office furniture across 3 floors. Approx 500kg total."></textarea>
+            <p class="form-hint">Helps your driver prepare. <span id="hire-cargo-description-count">0</span>/300 characters.</p>
+          </div>
+
+          <!-- Live price display — hourly rate × hours, plus fuel surcharge & cargo multiplier -->
+          <div class="quote-box">
+            <p class="quote-label">Your Estimated Hire Total</p>
+            <div class="quote-amount" id="hire-quote-display">Fill fields above</div>
+            <p class="quote-distance">Price includes fuel adjustment and cargo handling factor</p>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="hire-terms-agree" />
+            <label class="checkbox-label" for="hire-terms-agree">
+              I have read and agree to the
+              <button onclick="showView('terms-client')">Client Terms &amp; Conditions</button>
+              and <button onclick="showView('privacy')">Privacy Policy</button>.
+              I understand payment is made directly to the driver after the hire period ends.
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="hire-book-btn" onclick="handleTimeHireSubmit()">
+            Confirm Hire Booking →
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══════════════════════════════════════════════════════════
+           SHARED SUCCESS PANEL
+           Hidden until any booking type submits successfully.
+           showBookingSuccess() in app.js Section 7E populates it.
+           Handles both single tracking codes and batch code lists.
+           ══════════════════════════════════════════════════════════ -->
       <div class="card hidden" id="booking-success">
         <div class="success-panel">
           <div class="success-icon">🎉</div>
           <h3>Booking Received!</h3>
+
+          <!-- Single tracking code (Single Trip / Time Hire) -->
           <p>Your tracking code is:</p>
           <div class="tracking-code-badge" id="success-tracking-code">—</div>
-          <p>
-            Save this code to track your order. We'll message you on WhatsApp to confirm your booking shortly.
-          </p>
+
+          <!-- Multiple tracking codes (Multiple Trips batch) — hidden for single -->
+          <!-- showBookingSuccess() in app.js shows one or the other, never both -->
+          <div class="hidden" id="success-tracking-code-list" style="margin-bottom:24px;">
+            <!-- Populated dynamically with <span class="tracking-code-chip"> elements -->
+          </div>
+
+          <p>Save your tracking code(s) to follow your order. We'll confirm via WhatsApp shortly.</p>
           <p style="margin-bottom:24px;">
             <strong>Payment:</strong> Settle directly with your driver after delivery.
           </p>
 
-          <!-- WhatsApp confirmation button -->
           <a href="#" class="btn btn-whatsapp btn-full" id="whatsapp-confirm-btn" style="margin-bottom:12px;">
             📲 Open WhatsApp Confirmation
           </a>
           <p class="form-hint" style="text-align:center;">
-            Tap above to complete your booking via WhatsApp. Your driver will be assigned once confirmed.
+            Tap above to confirm via WhatsApp. Your driver(s) will be assigned once confirmed.
           </p>
 
           <div class="section-divider"></div>
